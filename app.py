@@ -1240,20 +1240,30 @@ def main():
         with tab1:
             st.markdown("### Comparte cómo te sientes...")
             
-            # Input de chat mejorado
-            texto_usuario = st.chat_input("Escribe lo que estás sintiendo en este momento...")
+            # SOLUCIÓN: Reemplazo de st.chat_input() por st.text_area() compatible
+            texto_usuario = st.text_area(
+                "Escribe lo que estás sintiendo en este momento...", 
+                height=100,
+                key="emocion_input",
+                placeholder="Describe tus emociones, pensamientos o cómo te sientes en este momento..."
+            )
             
-            if texto_usuario:
-                # Mostrar mensaje del usuario
-                with st.chat_message("user"):
-                    st.write(texto_usuario)
-                
-                # Procesar y mostrar respuesta
-                with st.chat_message("assistant"):
-                    with st.spinner("🔍 Analizando tus emociones..."):
-                        respuesta = procesar_entrada_usuario(texto_usuario)
-                        if respuesta:
-                            mostrar_respuesta(respuesta)
+            if st.button("Analizar mis emociones", type="primary", use_container_width=True):
+                if texto_usuario.strip():
+                    # Mostrar mensaje del usuario
+                    with st.container():
+                        st.markdown("**Tu mensaje:**")
+                        st.info(texto_usuario)
+                    
+                    # Procesar y mostrar respuesta
+                    with st.container():
+                        st.markdown("**Asistente:**")
+                        with st.spinner("🔍 Analizando tus emociones..."):
+                            respuesta = procesar_entrada_usuario(texto_usuario)
+                            if respuesta:
+                                mostrar_respuesta(respuesta)
+                else:
+                    st.warning("Por favor, escribe cómo te sientes para poder ayudarte.")
             
             # Sugerencias rápidas
             st.markdown("---")
